@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build wsl",
+      "type": "shell",
+      "command": "gcc abnt.c -o abnt",
+      "group": "build"
+    },
+    {
+      "label": "run wsl",
+      "type": "shell",
+      "command": "./abnt",
+      "dependsOn": "build wsl"
+    }
+  ]
+}

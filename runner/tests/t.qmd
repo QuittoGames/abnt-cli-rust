@@ -1,0 +1,86 @@
+---
+title: "Documento de Teste ABNT"
+author: "Quitto"
+date: today
+
+format:
+  pdf:
+    pdf-engine: lualatex
+    
+toc: true
+toc-depth: 3
+number-sections: true
+---
+
+# Dedicatória
+
+Dedico este trabalho a todos que contribuíram para meu aprendizado.
+
+# Agradecimentos
+
+Agradeço aos professores, colegas e familiares pelo apoio.
+
+# Resumo
+
+Este é um documento de teste para verificar a geração de PDFs utilizando Quarto e o modelo ABNT. O objetivo é validar títulos, seções, citações, tabelas, figuras e referências.
+
+**Palavras-chave:** Quarto. ABNT. Teste.
+
+# Abstract
+
+This is a test document to validate PDF generation using Quarto and ABNT standards.
+
+**Keywords:** Quarto. ABNT. Test.
+
+# Introdução
+
+A computação moderna depende de sistemas cada vez mais distribuídos.
+
+## Objetivos
+
+- Testar o Quarto
+- Testar o abnTeX2
+- Testar referências
+
+# Fundamentação Teórica
+
+## Algoritmos de Consenso
+
+O algoritmo RAFT é amplamente utilizado em sistemas distribuídos.
+
+### Exemplo de Equação
+
+$$
+a^2+b^2=c^2
+$$
+
+### Exemplo de Tabela
+
+| Tecnologia | Linguagem |
+|------------|------------|
+| Spring Boot | Java |
+| FastAPI | Python |
+| ASP.NET | C# |
+
+### Exemplo de Lista
+
+1. RAFT
+2. Paxos
+3. Zab
+
+# Metodologia
+
+Foi realizada uma revisão bibliográfica sobre algoritmos de consenso.
+
+# Resultados
+
+Os testes demonstraram que o documento foi compilado corretamente.
+
+# Conclusão
+
+O Quarto permite produzir documentos acadêmicos de forma organizada.
+
+# Referências
+
+::: {#refs}
+:::

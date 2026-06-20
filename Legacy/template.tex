@@ -1,0 +1,102 @@
+\documentclass[
+  12pt,
+  oneside,
+  openright
+]{abntex2}
+
+% Idioma e Fonte (XeLaTeX)
+\usepackage[brazil]{babel}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+\usepackage[alf]{abntex2cite}
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=2cm]{geometry}
+
+% Identação
+\usepackage{indentfirst}
+
+% Tabelas geradas pelo Pandoc
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{calc} % Essencial para o cálculo de colunas do Pandoc
+
+% Imagens e Links (O Pandoc injeta \href e \includegraphics do Markdown)
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{needspace}
+
+\let\oldsection\section
+\renewcommand{\section}[1]{%
+  \Needspace{8\baselineskip}%
+  \oldsection{#1}%
+}
+
+\let\oldsubsection\subsection
+\renewcommand{\subsection}[1]{%
+  \Needspace{6\baselineskip}%
+  \oldsubsection{#1}%
+}
+
+\let\oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}[1]{%
+  \Needspace{4\baselineskip}%
+  \oldsubsubsection{#1}%
+}
+
+% Pandoc pode gerar tabelas longtable sem legenda com:
+% {\def\LTcaptype{none} % do not increment counter}
+% No abntex2+hyperref isso pode disparar: "No counter 'none' defined".
+% Definimos um contador dummy para satisfazer \LTcaptype=none.
+\newcounter{none}
+\providecommand{\theHnone}{none.\arabic{none}}
+
+% Macro OBRIGATÓRIA do Pandoc para listas
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Cabeçalho
+\pagestyle{plain}
+
+% Metadados injetados pelo frontmatter YAML do Markdown
+\title{$title$}
+\author{$author$}
+\date{$date$}
+
+\begin{document}
+
+% O abntex2 já aplica espaçamento 1.5 padrão nativamente.
+% A flag \textual garante o comportamento da formatação ABNT para o corpo.
+\textual
+
+% CAPA
+\begin{capa}
+  \centering
+  {\ABNTEXchapterfont\large $author$ \par}
+  \vfill
+  {\ABNTEXchapterfont\bfseries\Large $title$ \par}
+  \vfill
+  {\large $date$}
+\end{capa}
+
+% FOLHA DE ROSTO
+\begin{folhaderosto}
+  \centering
+  {\ABNTEXchapterfont $author$ \par}
+  \vfill
+  {\ABNTEXchapterfont\bfseries\Large $title$ \par}
+  \vfill
+  Trabalho apresentado como requisito parcial.  
+  \vfill
+  {\large $date$}
+\end{folhaderosto}
+
+% SUMÁRIO
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% CONTEÚDO (Injetado do inter.md)
+$body$
+
+\end{document}
