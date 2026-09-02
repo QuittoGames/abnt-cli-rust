@@ -1,0 +1,175 @@
+% abnt-header.tex
+% Política ABNT para ABNT Engine — NBR 14724:2011
+% ============================================================
+%
+% Este arquivo implementa as escolhas de **política** ABNT para o
+% ABNT Engine. O `template.tex` é o motor estrutural (Quarto +
+% Pandoc + abntex2); este arquivo é a camada de política ABNT.
+%
+% Decisões documentadas:
+%   - ADR 001: BibLaTeX-abnt (bibliografia)
+%   - ADR 002: NBR 14724:2011 + legenda 12pt / fonte 10pt
+%
+% As alterações neste arquivo DEVEM ser acompanhadas de:
+%   1. Atualização de ADR correspondente em docs/decisions/
+%   2. Atualização da matriz normativa em docs/research/
+%   3. Validação visual (Camada 4-6 da estratégia de testes)
+%
+% ============================================================
+% PACOTES ADICIONAIS PARA POLÍTICA ABNT DE FIGURAS
+% ============================================================
+% subcaption para subfiguras com tamanho ABNT
+\usepackage{subcaption}
+
+% ============================================================
+% MACROS PARA FONTE DA ILUSTRAÇÃO
+% (NBR 14724:2011 §5.8 + NBR 14724:2024 §5.8)
+% ============================================================
+% \fonte{...} já existe nativamente em abntex2 v1.8.
+% Aqui criamos aliases mais explícitos para alinhamento com a norma.
+
+% Fonte: Elaborado pelo próprio autor.
+% Uso: \fonteElaborado
+\newcommand{\fonteElaborado}{%
+  \fonte{Elaborado pelo próprio autor.}%
+}
+
+% Fonte: Adaptado de <origem>.
+% Uso: \fonteAdaptado{LAMPORT (1994, p. 50)}
+\newcommand{\fonteAdaptado}[1]{%
+  \fonte{Adaptado de #1.}%
+}
+
+% Fonte: retirado de <origem>.
+% Uso: \fonteRetirado{XYZ (ano)}
+\newcommand{\fonteRetirado}[1]{%
+  \fonte{Retirado de #1.}%
+}
+
+% Fonte: traduzido de <origem>.
+% Uso: \fonteTraduzido{XYZ (ano)}
+\newcommand{\fonteTraduzido}[1]{%
+  \fonte{Traduzido de #1.}%
+}
+
+% ============================================================
+% LISTA DE ILUSTRAÇÕES (NBR 14724:2011 §4.2.1.9)
+% ============================================================
+% \listoffigures existe nativamente (pacote tocbibind).
+% Aqui adicionamos título ABNT-padrão.
+\newcommand{\listadeilustracoes}{%
+  \chapter*{LISTA DE ILUSTRAÇÕES}%
+  \addcontentsline{toc}{chapter}{LISTA DE ILUSTRAÇÕES}%
+  \listoffigures%
+}
+
+% ============================================================
+% SUBCAPTION (ABNT)
+% ============================================================
+% Tamanho ABNT: caption de subfigura = 12pt (mesmo do corpo),
+% label de subfigura = "Figura 1a" (sem ponto final após label).
+\captionsetup[subfigure]{
+  labelfont={normalsize},
+  textfont={normalsize},
+  labelformat=simple,
+  labelsep=space,
+  font=normalsize
+}
+
+% ============================================================
+% FIGURA (NBR 14724:2011 §5.8)
+% ============================================================
+% \caption já é "Figura N -- Título" (textendash) em abntex2 v1.9.6.
+% A fonte (declarada via \fonte) é menor (10pt) por padrão abntex2.
+% Esta seção é mantida como espaço para override futuro (ex.:
+% alterar separador para hífen simples, etc.).
+
+% ============================================================
+% LISTA DE TABELAS (NBR 14724:2011 §4.2.1.8)
+% ============================================================
+% Gera capítulo pré-textual com índice de tabelas.
+% Uso: \listadetabelas
+\newcommand{\listadetabelas}{%
+  \chapter*{LISTA DE TABELAS}%
+  \addcontentsline{toc}{chapter}{LISTA DE TABELAS}%
+  \listoftables%
+}
+
+% ============================================================
+% LISTA DE QUADROS (NBR 14724:2011 §4.2.1.10)
+% ============================================================
+% Pandoc-Crossref não tem ambiente nativo "quadro"; usuário deve
+% criar índice manual. Este comando está reservado para uso futuro.
+% Uso: \listadequadros
+\newcommand{\listadequadros}{%
+  \chapter*{LISTA DE QUADROS}%
+  \addcontentsline{toc}{chapter}{LISTA DE QUADROS}%
+  % Pandoc-Crossref não gera \listofquadros; reservado para extensão.
+  \textit{Lista de quadros não gerada automaticamente. Use lista manual.}%
+}
+
+% ============================================================
+% TABELA (NBR 14724:2011 §5.9 + IBGE)
+% ============================================================
+% Macro \IBGEtab nativa em abntex2 v1.8.
+% Aqui configuramos tamanho ABNT:
+%   - Caption = 12pt (mesmo do corpo), formato "Tabela N -- Título"
+%   - Fonte da tabela = 10pt (menor)
+%   - Conteúdo = 12pt (mesmo do corpo)
+\captionsetup[table]{
+  labelfont={normalsize},
+  textfont={normalsize},
+  labelformat=simple,
+  labelsep=endash,
+  font=normalsize,
+  justification=centering,
+  singlelinecheck=false
+}
+
+% Alias para \IBGEtab com fonte.
+% Uso: \tabelaIBGE{Título}{Fonte}{Conteúdo tabular}
+% Mantém compatibilidade com abntex2 + adiciona política ABNT.
+\newcommand{\tabelaIBGE}[3]{%
+  \begin{table}[htb]%
+    \centering%
+    \caption{#1}%
+    \IBGEtabfontereduzida%
+    #3%
+    \fonte{#2}%
+  \end{table}%
+}
+
+% ============================================================
+% EQUAÇÃO (NBR 14724:2011 §5.10)
+% ============================================================
+% Equações têm numeração sequencial automática (1), (2), (3)...
+% NBR 14724 não tem regra explícita sobre tamanho/estilo; abntex2
+% usa o default do LaTeX. Apenas criando alias semântico.
+%
+% Uso: \begin{equation}\label{eq:label} ... \end{equation}
+% Ou inline: $...$ (matemática inline)
+
+% ============================================================
+% LISTAGEM (CÓDIGO) — NBR não tem regra específica
+% ============================================================
+% Pandoc-Crossref gera \begin{figure} por default para blocos de
+% código. Para usar ambiente "listing" (pacote listings), adicionar
+% flag --listings na linha de comando do Pandoc.
+%
+% Aqui apenas garantimos que caption setup de listagem (se existir)
+% segue o padrão ABNT.
+\captionsetup[listing]{
+  labelfont={normalsize},
+  textfont={normalsize},
+  labelformat=simple,
+  labelsep=space,
+  font=normalsize
+}
+
+% ============================================================
+% QUADRO (NBR 14724:2011 §5.10)
+% ============================================================
+% Pandoc-Crossref não tem ambiente "quadro" built-in; usuários devem
+% usar tabela com nome customizado ou criar ambiente custom.
+% Esta seção é mantida como espaço para override futuro.
+

@@ -80,7 +80,10 @@ Os testes demonstraram que o documento foi compilado corretamente.
 
 O Quarto permite produzir documentos acadêmicos de forma organizada.
 
+::: {.unnumbered}
 # Referências
 
-::: {#refs}
+As referências são geradas automaticamente pelo `\printbibliography` definido
+no `template.tex` (linha 279), usando o arquivo `.bib` detectado pelo runner
+no diretório do template.
 :::

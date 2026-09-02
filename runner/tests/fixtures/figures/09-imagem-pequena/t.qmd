@@ -1,0 +1,24 @@
+---
+title: "Fixture 09 — Imagem Pequena"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida uma imagem **pequena** — testa alinhamento e caption.
+
+# Figura pequena
+
+![Imagem pequena (200x150)](images/placeholder-small.png){#fig-pequena width=3cm}
+
+Texto após a figura para verificar fluxo normal.
+
+# Validação esperada
+
+- Imagem pequena (3cm) renderizada no tamanho solicitado.
+- Caption aparece corretamente.
+- Após a figura, texto flui normalmente.

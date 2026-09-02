@@ -1,0 +1,25 @@
+---
+title: "Fixture 06 — Imagem Adaptada"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida a fonte para imagens **adaptadas de terceiros**
+(ABNT NBR 14724:2024 §5.8 + NBR 10520:2023).
+
+# Figura
+
+![Diagrama adaptado de uma referência externa](images/placeholder.png){#fig-adaptada}
+
+Fonte: ${ \fonteAdaptado{LAMPORT (1994, p. 50)} }$
+
+# Validação esperada
+
+- A linha "Fonte: Adaptado de LAMPORT (1994, p. 50)" aparece logo abaixo da imagem.
+- Após Commit 4: macro `\fonteAdaptado{...}` produz esse texto automaticamente.
+- Formato segue NBR 10520: SOBRENOME (ano, p. X).

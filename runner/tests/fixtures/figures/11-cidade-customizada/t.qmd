@@ -1,0 +1,30 @@
+---
+title: "Fixture 11 — Variáveis Dinâmicas (cidade customizada)"
+author: "ABNT Engine"
+date: today
+cidade: "Rio de Janeiro"
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida a substituição da variável **`cidade`** no template
+(antes hardcoded em "São Paulo").
+
+# Comportamento esperado
+
+- O YAML do `.qmd` define `cidade: "Rio de Janeiro"`.
+- O `template.tex` substitui o valor onde estava "São Paulo".
+- A capa e a folha de rosto devem mostrar "Rio de Janeiro" em vez de "São Paulo".
+
+# Fallback
+
+Se `cidade` não for definida no YAML, o template usa "São Paulo" como
+fallback (decisão de default).
+
+# Teste de regressão
+
+Se a variável `cidade` não for mais processada, este PDF vai mostrar
+"São Paulo" — o que é regressão.

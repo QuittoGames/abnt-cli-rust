@@ -1,0 +1,25 @@
+---
+title: "Fixture 05 — Imagem Própria"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida a fonte para imagens **elaboradas pelo próprio autor**
+(ABNT NBR 14724:2024 §5.8).
+
+# Figura
+
+![Diagrama criado pelo autor para esta fixture](images/placeholder.png){#fig-propria}
+
+Fonte: ${ \fonteElaborado }$
+
+# Validação esperada
+
+- A linha "Fonte: Elaborado pelo próprio autor" aparece logo abaixo da imagem.
+- Após Commit 4: macro `\fonteElaborado` produz esse texto automaticamente.
+- Tamanho da fonte da fonte: 10pt (menor que corpo de 12pt).

@@ -1,0 +1,26 @@
+---
+title: "Fixture 03 — Referência Cruzada"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida o sistema de **referências cruzadas** Quarto (`@fig-label`).
+
+# Conteúdo
+
+![Diagrama de teste para crossref](images/placeholder.png){#fig-crossref}
+
+Conforme demonstrado na @fig-crossref, o sistema de crossref do Quarto gera
+hiperlinks automáticos. Esta frase referencia @fig-crossref novamente para
+testar o cache de crossref.
+
+# Validação esperada
+
+- A menção `@fig-crossref` no texto vira "Figura 1" (ou similar).
+- O hyperlink leva à página onde a figura aparece.
+- PDF tem pelo menos 2 hiperlinks para a mesma figura.

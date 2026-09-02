@@ -1,0 +1,23 @@
+---
+title: "Fixture 08 — Imagem Grande"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida uma imagem **maior que a largura da página** — testa
+se o LaTeX/Quarto escala automaticamente.
+
+# Figura grande
+
+![Imagem grande (1200x900) que deve ser escalada para caber na página](images/placeholder-large.png){#fig-grande width=100%}
+
+# Validação esperada
+
+- A imagem é escalada para caber dentro da margem (largura \linewidth).
+- Não há overflow horizontal.
+- Texto ao redor (se houver) flui corretamente.

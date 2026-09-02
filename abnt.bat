@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 :: ── Caminhos ──────────────────────────────────────────────────────────────────
 set "ROOT=%~dp0"
-set "RUNNER_DIR=%D:\Research\ABNT\runner"
+set "RUNNER_DIR=%ROOT%runner"
 set "BIN=%RUNNER_DIR%\target\release\runner.exe"
 
 :: ── 1. Arg obrigatório: filename ──────────────────────────────────────────────
@@ -44,5 +44,12 @@ if not exist "%BIN%" (
     exit /b 1
 )
 
-:: ── 4. Executa: PATH do sistema como arg1, filename como arg2 ─────────────────
+:: ── 4. Configurar TEXINPUTS para que LuaLaTeX encontre abnt-header.tex ────────
+:: O template.tex usa \input{abnt-header} que é resolvido em runtime.
+:: Como LuaLaTeX compila em diretório temporário do Quarto, precisamos
+:: adicionar o diretório do template (que contém abnt-header.tex) ao TEXINPUTS.
+set "TEMPLATE_DIR=%ROOT%templetes"
+set "TEXINPUTS=%TEMPLATE_DIR%;%TEXINPUTS%"
+
+:: ── 5. Executa: PATH do sistema como arg1, filename como arg2 ─────────────────
 "%BIN%" "%PATH%" "%~1"

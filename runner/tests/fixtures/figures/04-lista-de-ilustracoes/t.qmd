@@ -1,0 +1,39 @@
+---
+title: "Fixture 04 — Lista de Ilustrações"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida a **lista de ilustrações** automática via Pandoc-Crossref.
+
+# Figuras
+
+![Primeira](images/placeholder.png){#fig-lista-um}
+
+![Segunda](images/placeholder-medium.png){#fig-lista-dois}
+
+![Terceira](images/placeholder-small.png){#fig-lista-tres}
+
+# Lista de ilustrações (ABNT NBR 14724 §4.2.1.9)
+
+A lista deve aparecer como elemento pré-textual, com o título "LISTA DE
+ILUSTRAÇÕES" (a ser implementado em Commit 4). Após Commit 4, esta lista
+será gerada automaticamente pelo `\listoffigures` inserido no template.
+
+Para gerar a lista **dentro deste documento** (não pré-textual), basta
+chamar a macro via raw LaTeX:
+
+::: {.raw-latex}
+\listadeilustracoes
+:::
+
+# Validação esperada
+
+- Após Commit 4: PDF tem seção "LISTA DE ILUSTRAÇÕES" listando as 3 figuras
+  com numeração e título.
+- Antes de Commit 4: lista não aparece (esperado).

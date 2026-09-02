@@ -1,0 +1,46 @@
+---
+title: "Fixture 12 — Tabela ABNT"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida **tabelas ABNT** (NBR 14724:2011 §5.9) com uso da macro
+`\IBGEtab` do abntex2 e da macro `\tabelaIBGE` do `abnt-header.tex`.
+
+# Tabela
+
+| Coluna A | Coluna B | Coluna C |
+|----------|----------|----------|
+| A1 | B1 | C1 |
+| A2 | B2 | C2 |
+| A3 | B3 | C3 |
+
+: Comparação entre colunas {#tbl-comparacao}
+
+Fonte: Elaborado pelo próprio autor.
+
+# Validação esperada
+
+- Caption acima da tabela: "Tabela 1 – Comparação entre colunas".
+- Fonte abaixo da tabela em 10pt.
+- Conteúdo da tabela em 12pt.
+- Tabela centralizada na página.
+
+# Lista de tabelas
+
+Para gerar a lista **neste documento** (não pré-textual), use a macro via
+raw LaTeX:
+
+::: {.raw-latex}
+\listadetabelas
+:::
+
+# Validação esperada
+
+- Após inserir `\listadetabelas`: capítulo "LISTA DE TABELAS" com índice
+  das tabelas do documento.

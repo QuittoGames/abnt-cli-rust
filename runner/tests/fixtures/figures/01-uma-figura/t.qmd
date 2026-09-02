@@ -1,0 +1,18 @@
+---
+title: "Fixture 01 — Uma Figura"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida o caso mais simples: **uma única figura** com legenda.
+
+# Figura
+
+![Diagrama placeholder usado como fixture](images/placeholder.png){#fig-unica}
+
+Veja a @fig-unica para visualizar o placeholder.

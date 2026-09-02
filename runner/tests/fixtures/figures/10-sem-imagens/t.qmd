@@ -1,0 +1,29 @@
+---
+title: "Fixture 10 — Sem Imagens"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida o caso **sem nenhuma figura** — sanity check.
+
+# Conteúdo
+
+Este documento não tem figuras. Serve para validar que:
+
+- O template compila mesmo sem `\includegraphics`.
+- A lista de ilustrações (se houver) não gera página vazia.
+- Numeração de seções não tem gaps artificiais.
+
+# Mais conteúdo
+
+Mais parágrafos para ter certeza de que o documento é renderizado
+corretamente sem figuras.
+
+# Conclusão
+
+Documento de teste sem figuras renderizado com sucesso.

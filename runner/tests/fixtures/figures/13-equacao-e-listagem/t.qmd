@@ -1,0 +1,61 @@
+---
+title: "Fixture 13 — Equação e Listagem"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida dois elementos adicionais:
+
+1. **Equações** (NBR 14724:2011 §5.10) com numeração automática.
+2. **Listagens de código** (sem regra ABNT específica, padrão Pandoc-Crossref).
+
+# Equações
+
+A famosa equação de Einstein:
+
+$$
+E = mc^2
+$$ {#eq-einstein}
+
+Veja a @eq-einstein para visualizar.
+
+Uma segunda equação (Pitágoras):
+
+$$
+a^2 + b^2 = c^2
+$$ {#eq-pitagoras}
+
+Veja a @eq-pitagoras.
+
+# Validação esperada — equações
+
+- Numeração automática: (1), (2).
+- @eq-einstein → "(1)" ou "Equação 1".
+- @eq-pitagoras → "(2)" ou "Equação 2".
+- Centralizadas, em estilo matemático padrão.
+
+# Listagem (código)
+
+```{python}
+#| label: lst-python-exemplo
+#| caption: "Exemplo de código Python"
+def hello(name: str) -> str:
+    """Saudação amigável."""
+    return f"Olá, {name}!"
+
+print(hello("ABNT Engine"))
+```
+
+Veja a @lst-python-exemplo.
+
+# Validação esperada — listagem
+
+- Pandoc-Crossref gera ambiente `figure` (não `listing`) por padrão.
+- Caption: "Listagem 1 – Exemplo de código Python" (ou similar).
+- Bloco de código com syntax highlighting VS Code dark theme.
+- Fonte monoespaçada.

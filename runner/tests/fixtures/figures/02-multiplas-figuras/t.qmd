@@ -1,0 +1,31 @@
+---
+title: "Fixture 02 — Múltiplas Figuras"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida múltiplas figuras no mesmo documento.
+
+# Figuras
+
+![Primeira figura](images/placeholder.png){#fig-um}
+
+![Segunda figura](images/placeholder-medium.png){#fig-dois}
+
+![Terceira figura](images/placeholder-small.png){#fig-tres}
+
+![Quarta figura](images/placeholder.png){#fig-quatro}
+
+![Quinta figura](images/placeholder-medium.png){#fig-cinco}
+
+Veja as figuras: @fig-um, @fig-dois, @fig-tres, @fig-quatro, @fig-cinco.
+
+# Validação esperada
+
+- 5 figuras distintas com numeração contínua (Figura 1, 2, 3, 4, 5).
+- Crossref funciona: clicar em @fig-um leva à Figura 1.

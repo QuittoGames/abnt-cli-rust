@@ -1,0 +1,36 @@
+---
+title: "Fixture 07 — Subfiguras"
+author: "ABNT Engine"
+date: today
+format:
+  pdf:
+    pdf-engine: lualatex
+---
+
+# Introdução
+
+Esta fixture valida **subfiguras** (múltiplas imagens dentro de uma figura
+composta, com sublegendas).
+
+# Subfiguras
+
+::: {#fig-subfigs layout-ncol=3}
+
+![Subfigura A](images/placeholder.png){#fig-sub-a}
+
+![Subfigura B](images/placeholder-medium.png){#fig-sub-b}
+
+![Subfigura C](images/placeholder-small.png){#fig-sub-c}
+
+Três subfiguras demonstrando o pacote `subcaption`.
+:::
+
+Veja @fig-subfigs para o grupo, ou subfiguras individuais: @fig-sub-a,
+@fig-sub-b, @fig-sub-c.
+
+# Validação esperada
+
+- 3 subfiguras em grid (3 colunas).
+- Cada subfigura tem sublegenda "Figura 1a — Subfigura A", etc.
+- Figura principal tem caption geral.
+- Após Commit 4: `subcaption` package carregado e configurado ABNT.

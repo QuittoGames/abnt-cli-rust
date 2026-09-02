@@ -1,0 +1,38 @@
+% refs.bib
+% Fixture mínima para validar detecção automática de .bib pelo runner.
+% Decisão arquitetural: docs/decisions/001-bibliografia-biblatex-vs-csl.md
+%
+% Esta fixture existe para:
+%   1. Validar que `Environment::discover_bib_in` encontra este arquivo.
+%   2. Validar que `--metadata bibliography=refs.bib` é injetado.
+%   3. Servir de exemplo para usuários novos do engine.
+%
+% Formato: BibLaTeX (compatível com biblatex-abnt via style=abnt).
+
+@book{lamport1994,
+  author    = {Lamport, Leslie},
+  title     = {{LaTeX}: a document preparation system},
+  edition   = {2},
+  publisher = {Addison-Wesley},
+  year      = {1994},
+  address   = {Reading, Massachusetts}
+}
+
+@article{knuth1984,
+  author  = {Knuth, Donald E.},
+  title   = {Literate programming},
+  journal = {The Computer Journal},
+  volume  = {27},
+  number  = {2},
+  pages   = {97--111},
+  year    = {1984}
+}
+
+@misc{abntex2024,
+  author       = {{Equipe abntex2}},
+  title        = {abntex2: classe {LaTeX} e estilo bibliográfico compatíveis com as normas da ABNT},
+  year         = {2024},
+  howpublished = {GitHub repository},
+  note         = {Acesso em: 01 set. 2026},
+  url          = {https://github.com/abntex/abntex2}
+}

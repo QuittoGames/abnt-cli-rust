@@ -9,7 +9,13 @@
 
 
 \usepackage[backend=biber,style=abnt]{biblatex}
-\addbibresource{bib/bibliografia_quarto.bib}
+% Se o runner detectar .bib único no diretório do template, injeta
+% --metadata bibliography=<path>. Pandoc substitui $bibliography$ abaixo
+% pelo path detectado em runtime. Sem .bib, biblatex não carrega refs
+% (mas compila — gera warning, não erro fatal).
+$if(bibliography)$
+\addbibresource{$bibliography$}
+$endif$
 
 % ============================================================
 % FIX PANDOC CODE (Shaded + Highlighting - VS Code Dark Theme)
@@ -224,6 +230,11 @@
 \renewcommand{\subsubsection}[1]{\Needspace{4\baselineskip}\oldsubsubsection{#1}}
 
 % ============================================================
+% POLÍTICA ABNT (figuras, fontes, lista de ilustrações)
+% ============================================================
+\input{abnt-header}
+
+% ============================================================
 % DOCUMENTO
 % ============================================================
 \begin{document}
@@ -239,7 +250,7 @@ $for(author)$$author$$sep$ \\ $endfor$
 \vfill
 {\ABNTEXchapterfont\bfseries\Large\MakeUppercase{$title$}}
 \vfill
-{\large São Paulo \\ $date$}
+{\large $if(cidade)$$cidade$$else$São Paulo$endif$ \\ $date$}
 \end{capa}
 
 % ---------------- FOLHA DE ROSTO ----------------
@@ -257,11 +268,21 @@ $for(author)$$author$$sep$ \\ $endfor$
 Trabalho acadêmico apresentado como requisito de avaliação.
 \end{minipage}
 \vfill
-{\large São Paulo \\ $date$}
+{\large $if(cidade)$$cidade$$else$São Paulo$endif$ \\ $date$}
 \end{folhaderosto}
 
 % ---------------- SUMÁRIO ----------------
 \tableofcontents*
+\cleardoublepage
+
+% ---------------- LISTA DE ILUSTRAÇÕES (NBR 14724 §4.2.1.9) ----------------
+% Sempre gerada (mesmo se vazia). Padrão ABNT.
+\listadeilustracoes
+\cleardoublepage
+
+% ---------------- LISTA DE TABELAS (NBR 14724 §4.2.1.8) ----------------
+% Sempre gerada (mesmo se vazia). Padrão ABNT.
+\listadetabelas
 \cleardoublepage
 
 % ---------------- CONTEÚDO ----------------
