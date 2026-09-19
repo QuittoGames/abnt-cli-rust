@@ -10,6 +10,10 @@
 //   1. Env var ABNT_TEMPLATE (mais específica)
 //   2. <runner_dir>/../templetes/template.tex (relativo ao binário)
 //   3. Erro claro se nada for encontrado
+//
+// Resolução do .bib:
+//   - Busca automática no diretório do .qmd (projeto)
+//   - Se encontrar exatamente 1 arquivo .bib, injeta --metadata bibliography=<caminho_absoluto>
 
 use std::env;
 use std::path::{Path, PathBuf};
@@ -80,9 +84,9 @@ fn resolve_template_path() -> Result<PathBuf, String> {
     Err(errors::TEMPLATE_NOT_FOUND.to_string())
 }
 
-/// Resolve o diretório onde procurar `.bib` (geralmente, o do template).
-fn bib_dir_for(template_path: &Path) -> PathBuf {
-    template_path
+/// Resolve o diretório onde procurar `.bib` (o do .qmd / projeto).
+fn project_dir_for(qmd_filename: &str) -> PathBuf {
+    Path::new(qmd_filename)
         .parent()
         .map(|p| p.to_path_buf())
         .unwrap_or_else(|| PathBuf::from("."))
@@ -112,11 +116,12 @@ fn render_pdf(system_path: &str, qmd_filename: &str, template_path: &Path) -> Ex
     }
 
     // 3. Construir args do render
-    let template_dir = bib_dir_for(template_path);
+    // Buscar .bib no diretório do .qmd (projeto), não no template
+    let qmd_dir = project_dir_for(qmd_filename);
     let template_path_str = template_path
         .to_str()
         .expect("template path contains invalid UTF-8");
-    let args = utils::environment::build(qmd_filename, &template_dir, template_path_str);
+    let args = utils::environment::build(qmd_filename, &qmd_dir, template_path_str);
 
     // 4. Render
     let render_status = Command::new("quarto")

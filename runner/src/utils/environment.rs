@@ -1,40 +1,64 @@
 // environment.rs
-// Responsabilidade: descobrir arquivos do diretório do template sem chamar
+// Responsabilidade: descobrir arquivos do diretório do .qmd (projeto) sem chamar
 // `cmd /C` (Windows-only, sujeito a command injection se paths vierem de CLI).
 // Toda descoberta é feita em Rust puro (cross-platform, deterministic).
 
 use std::fs;
 use std::path::Path;
 
-/// Tenta descobrir um único arquivo `.bib` dentro de `dir`.
+/// Tenta descobrir um único arquivo `.bib` dentro de `dir` (busca recursiva, 1 nível).
 ///
-/// Retorna `Some(filename)` se encontrar exatamente um arquivo,
+/// Retorna `Some(relative_path)` se encontrar exatamente um arquivo,
 /// `None` se encontrar zero ou mais de um (decisão de projeto: evita
 /// ambiguidade silenciosa).
 ///
+/// A busca verifica:
+///   1. Arquivos `.bib` diretamente em `dir`
+///   2. Arquivos `.bib` em subdiretórios imediatos (ex: `bib/`, `references/`)
+///
 /// Args:
-///   - `dir`: diretório onde procurar. **Não** é um caminho de template
-///     nem o PATH do sistema — apenas um diretório.
+///   - `dir`: diretório onde procurar (geralmente o do .qmd / projeto).
 ///
 /// Erros são tratados explicitamente: retorna `None` em qualquer falha de I/O.
 pub fn discover_bib_in(dir: &Path) -> Option<String> {
-    let entries = fs::read_dir(dir).ok()?;
+    let mut bibs: Vec<String> = Vec::new();
 
-    let bibs: Vec<String> = entries
-        .filter_map(|entry| {
-            let entry = entry.ok()?;
+    // 1. Buscar na raiz do diretório
+    if let Ok(entries) = fs::read_dir(dir) {
+        for entry in entries.filter_map(|e| e.ok()) {
             let path = entry.path();
-            if !path.is_file() {
-                return None;
+            if path.is_file() {
+                if let Some(name) = path.file_name()?.to_str() {
+                    if name.to_lowercase().ends_with(".bib") {
+                        bibs.push(name.to_string());
+                    }
+                }
             }
-            let name = path.file_name()?.to_str()?.to_string();
-            if name.to_lowercase().ends_with(".bib") {
-                Some(name)
-            } else {
-                None
+        }
+    }
+
+    // 2. Buscar em subdiretórios imediatos (1 nível)
+    if let Ok(entries) = fs::read_dir(dir) {
+        for entry in entries.filter_map(|e| e.ok()) {
+            let path = entry.path();
+            if path.is_dir() {
+                if let Ok(sub_entries) = fs::read_dir(&path) {
+                    for sub_entry in sub_entries.filter_map(|e| e.ok()) {
+                        let sub_path = sub_entry.path();
+                        if sub_path.is_file() {
+                            if let Some(name) = sub_path.file_name()?.to_str() {
+                                if name.to_lowercase().ends_with(".bib") {
+                                    // Retorna caminho relativo: "subdir/arquivo.bib"
+                                    let dir_name = path.file_name()?.to_str()?;
+                                    bibs.push(format!("{}/{}", dir_name, name));
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        })
-        .collect();
+        }
+    }
 
     match bibs.len() {
         1 => Some(bibs.into_iter().next().expect("len==1 just verified")),
@@ -45,11 +69,22 @@ pub fn discover_bib_in(dir: &Path) -> Option<String> {
 /// Retorna os args `--metadata bibliography=<file>` se houver um único `.bib`
 /// no diretório, ou `vec![]` caso contrário.
 ///
+/// O caminho retornado é **absoluto** e usa **forward slashes** (`/`)
+/// para compatibilidade com Pandoc/LaTeX no Windows (evita `\textbackslash`).
+///
 /// Args:
-///   - `dir`: diretório onde procurar (geralmente o mesmo do template).
+///   - `dir`: diretório onde procurar (geralmente o do .qmd / projeto).
 pub fn get_bibliografy(dir: &Path) -> Vec<String> {
     match discover_bib_in(dir) {
-        Some(bib) => vec!["--metadata".to_string(), format!("bibliography={}", bib)],
+        Some(bib) => {
+            let full_path = dir.join(&bib);
+            // Converter para forward slashes para compatibilidade com LaTeX
+            let path_str = full_path.to_string_lossy().replace('\\', "/");
+            vec![
+                "--metadata".to_string(),
+                format!("bibliography={}", path_str),
+            ]
+        }
         None => vec![],
     }
 }
@@ -71,12 +106,12 @@ pub fn get_template(template_path: &str) -> Vec<String> {
 ///
 /// Ordem dos args (importante para Quarto CLI):
 ///   1. `render <filename.qmd>`
-///   2. `--metadata bibliography=<file>` (se houver .bib único)
+///   2. `--metadata bibliography=<path>` (se houver .bib único no projeto)
 ///   3. `--template <path>` (se template existir)
-pub fn build(qmd_filename: &str, template_dir: &Path, template_path: &str) -> Vec<String> {
+pub fn build(qmd_filename: &str, project_dir: &Path, template_path: &str) -> Vec<String> {
     let mut args: Vec<String> = vec!["render".to_string(), qmd_filename.to_string()];
 
-    for bib_arg in get_bibliografy(template_dir) {
+    for bib_arg in get_bibliografy(project_dir) {
         args.push(bib_arg);
     }
     for tpl_arg in get_template(template_path) {
@@ -106,10 +141,35 @@ mod tests {
     }
 
     #[test]
-    fn discover_bib_returns_some_when_one_bib() {
-        let dir = make_temp_dir("one_bib");
+    fn discover_bib_returns_some_when_one_bib_in_root() {
+        let dir = make_temp_dir("one_bib_root");
         File::create(dir.join("refs.bib")).unwrap();
         assert_eq!(discover_bib_in(&dir), Some("refs.bib".to_string()));
+        fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn discover_bib_returns_some_when_one_bib_in_subdir() {
+        let dir = make_temp_dir("one_bib_sub");
+        let subdir = dir.join("bib");
+        fs::create_dir(&subdir).unwrap();
+        File::create(subdir.join("references.bib")).unwrap();
+        assert_eq!(
+            discover_bib_in(&dir),
+            Some("bib/references.bib".to_string())
+        );
+        fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn discover_bib_returns_none_when_bib_in_root_and_subdir() {
+        // Ambiguidade: .bib na raiz E em subdiretório
+        let dir = make_temp_dir("bib_root_and_sub");
+        File::create(dir.join("refs.bib")).unwrap();
+        let subdir = dir.join("bib");
+        fs::create_dir(&subdir).unwrap();
+        File::create(subdir.join("extra.bib")).unwrap();
+        assert_eq!(discover_bib_in(&dir), None);
         fs::remove_dir_all(&dir).ok();
     }
 
@@ -132,11 +192,34 @@ mod tests {
     }
 
     #[test]
-    fn get_bibliografy_returns_metadata_args_when_bib_found() {
+    fn get_bibliografy_returns_metadata_args_with_full_path() {
         let dir = make_temp_dir("meta");
         File::create(dir.join("refs.bib")).unwrap();
         let args = get_bibliografy(&dir);
-        assert_eq!(args, vec!["--metadata", "bibliography=refs.bib"]);
+        // Retorna caminho absoluto com forward slashes (compatível com LaTeX)
+        let expected_value = format!(
+            "bibliography={}",
+            dir.join("refs.bib").to_string_lossy().replace('\\', "/")
+        );
+        assert_eq!(args, vec!["--metadata", &expected_value]);
+        fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn get_bibliografy_returns_metadata_args_with_subdir_path() {
+        let dir = make_temp_dir("meta_sub");
+        let subdir = dir.join("bib");
+        fs::create_dir(&subdir).unwrap();
+        File::create(subdir.join("references.bib")).unwrap();
+        let args = get_bibliografy(&dir);
+        // Retorna caminho absoluto com subdiretório e forward slashes
+        let expected_value = format!(
+            "bibliography={}",
+            dir.join("bib/references.bib")
+                .to_string_lossy()
+                .replace('\\', "/")
+        );
+        assert_eq!(args, vec!["--metadata", &expected_value]);
         fs::remove_dir_all(&dir).ok();
     }
 
@@ -170,7 +253,12 @@ mod tests {
         assert_eq!(args[0], "render");
         assert_eq!(args[1], "doc.qmd");
         assert!(args.contains(&"--metadata".to_string()));
-        assert!(args.contains(&"bibliography=refs.bib".to_string()));
+        // Verifica caminho absoluto com forward slashes
+        let expected_bib = format!(
+            "bibliography={}",
+            dir.join("refs.bib").to_string_lossy().replace('\\', "/")
+        );
+        assert!(args.contains(&expected_bib));
         assert!(args.contains(&"--template".to_string()));
 
         fs::remove_dir_all(&dir).ok();
