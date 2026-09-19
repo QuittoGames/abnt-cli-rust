@@ -1,0 +1,79 @@
+# Schema: evidence.yaml
+#
+# Schema canônico para registro de uma evidência extraída de fonte validada.
+# Produzido por evidence-agent.
+#
+# Cada evidência representa um claim (afirmação) sustentado por uma fonte
+# com localização precisa.
+
+# Campos:
+#   evidence_id              obrigatório  string  único (E001, E002, ...)
+#   claim                    obrigatório  string  1 frase, sem parafrasear
+#   evidence_type            obrigatório  enum    ver valores abaixo
+#   source.id                obrigatório  string  ID da fonte em source.yaml
+#   source.title             obrigatório  string
+#   source.authors           obrigatório  list[string]
+#   source.year              obrigatório  int
+#   source.doi               opcional     string
+#   location.page            opcional     int
+#   location.section         opcional     string  ex: "3.2 Methodology"
+#   location.table           opcional     string  ex: "Table 2"
+#   location.figure          opcional     string  ex: "Figure 3b"
+#   location.paragraph       opcional     int     ordinal na seção
+#   location.quote           opcional     string  citação direta, max 200 chars
+#   confidence               obrigatório  enum    [HIGH, MEDIUM, LOW]
+#   confidence_rationale     opcional     string
+#   limitations              opcional     list[string]
+#   related_evidence         opcional     list[string]  IDs de evidências relacionadas
+#   contradicts              opcional     list[string]  IDs que esta contradiz
+#   supports                 opcional     list[string]  IDs que esta sustenta
+#   extracted_by             obrigatório  string  [evidence-agent, paper-research-agent, user-provided]
+#   extracted_at             obrigatório  date    ISO 8601
+#   objective_relevance      opcional     string
+#   needs_full_text          opcional     bool
+
+# Valores válidos para enums:
+#
+#   evidence_type:
+#     - fact
+#     - finding
+#     - theory
+#     - method
+#     - result
+#     - statistic
+#     - definition
+#     - inference
+#
+#   confidence: [HIGH, MEDIUM, LOW]
+#   extracted_by: [evidence-agent, paper-research-agent, user-provided]
+
+# ============================================================
+# Exemplo completo (válido YAML, descomentar para usar)
+# ============================================================
+
+# ---
+# evidence_id: E001
+# claim: "Conic sections are plane curves defined by second-degree polynomial equations"
+# evidence_type: definition
+# source:
+#   id: P001
+#   title: "A Modern Approach to Conic Sections"
+#   authors:
+#     - "Smith, John"
+#   year: 2019
+#   doi: "10.1000/example.2019.001"
+# location:
+#   page: 3
+#   section: "1.1 Definitions"
+#   paragraph: 2
+#   quote: "A conic section is a curve defined as the intersection of..."
+# confidence: HIGH
+# confidence_rationale: "peer-reviewed paper, definitional claim, no ambiguity"
+# limitations:
+#   - "definition may vary slightly across sub-fields"
+# related_evidence:
+#   - E007
+# extracted_by: paper-research-agent
+# extracted_at: 2026-09-02
+# objective_relevance: "Foundation for the introduction of the TCC"
+# needs_full_text: false

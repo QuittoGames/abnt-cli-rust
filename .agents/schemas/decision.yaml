@@ -1,0 +1,86 @@
+# Schema: decision.yaml
+#
+# Schema canônico para registro de uma decisão tomada durante a pesquisa.
+# Produzido por research-refactor-agent quando uma escolha significativa
+# é feita (ex: aceitar fonte LOW_CONFIDENCE, escolher entre abordagens).
+
+# Campos:
+#   decision_id              obrigatório  string  único (D001, D002, ...)
+#   timestamp                obrigatório  date    ISO 8601
+#   context                  obrigatório  string  contexto da decisão
+#   related_task_id          opcional     string  ID da task
+#   related_source_ids       opcional     list[string]  IDs das fontes
+#   options                  obrigatório  list[object]
+#     option                 obrigatório  string
+#     pros                   obrigatório  list[string]
+#     cons                   obrigatório  list[string]
+#     evidence_basis         opcional     string
+#   proposal                 obrigatório  string
+#   proposal_rationale       obrigatório  string
+#   decision                 obrigatório  string
+#   decided_by               obrigatório  enum    [user, agent, consensus]
+#   decision_date            obrigatório  date    ISO 8601
+#   consequences             obrigatório  list[string]
+#   risks                    opcional     list[string]
+#   mitigations              opcional     list[string]
+#   status                   obrigatório  enum    [proposed, accepted, rejected, superseded, on_hold]
+#   supersedes               opcional     string  decision_id que esta substitui
+#   superseded_by            opcional     string  calculado (não input)
+
+# Valores válidos para enums:
+#
+#   decided_by: [user, agent, consensus]
+#   status: [proposed, accepted, rejected, superseded, on_hold]
+
+# ============================================================
+# Exemplo completo (válido YAML, descomentar para usar)
+# ============================================================
+
+# ---
+# decision_id: D001
+# timestamp: 2026-09-02T10:30:00Z
+# context: "Three candidate papers for evidence claim 'conics are second-degree curves'"
+# related_task_id: T003
+# related_source_ids:
+#   - P001
+#   - P005
+#   - P008
+# options:
+#   - option: "Use P001 (peer-reviewed, 156 citations)"
+#     pros:
+#       - "high authority"
+#       - "reproducible methodology"
+#       - "seminal in field"
+#     cons:
+#       - "only abstract accessible currently"
+#     evidence_basis: "source-validator classification HIGH"
+#   - option: "Use P005 (preprint, fresh data)"
+#     pros:
+#       - "full content accessible"
+#       - "current data 2023"
+#     cons:
+#       - "not peer-reviewed yet"
+#       - "single author"
+#     evidence_basis: "source-validator classification MEDIUM"
+#   - option: "Use both (cross-validation)"
+#     pros:
+#       - "strongest evidence"
+#       - "covers different aspects (theory + current)"
+#     cons:
+#       - "more work to integrate"
+#       - "potential contradiction to resolve"
+#     evidence_basis: "synthesis of both"
+# proposal: "Use both — high authority + current data triangulates well"
+# proposal_rationale: "Cross-validation is the gold standard; risk of contradiction is manageable"
+# decision: "Use both — proposal accepted"
+# decided_by: user
+# decision_date: 2026-09-02
+# consequences:
+#   - "Need to manage 2 source entries in .bib"
+#   - "Need to document potential contradiction in evidence table"
+# risks:
+#   - "P005 not yet peer-reviewed may not be reliable"
+# mitigations:
+#   - "Mark P005 evidence as MEDIUM confidence until peer review"
+#   - "Re-validate after peer review publication"
+# status: accepted

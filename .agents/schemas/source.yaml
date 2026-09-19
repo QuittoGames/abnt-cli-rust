@@ -1,0 +1,138 @@
+# Schema: source.yaml
+#
+# Schema canônico para registro de uma fonte de pesquisa. Usado por:
+#   - literature-agent (descoberta)
+#   - web-research-agent (descoberta)
+#   - source-validator (validação)
+#   - citation-agent (geração BibTeX)
+#
+# Convenções:
+#   - YAML estrito (sem tabs, 2 espaços)
+#   - Campos marcados como "obrigatório" devem ser preenchidos
+#   - Campos "opcional" podem ser null ou omitidos
+
+# Campos:
+#   id                          obrigatório  string  único (P001, W001, B001)
+#   type                        obrigatório  enum    ver valores abaixo
+#   title                       obrigatório  string
+#   authors                     obrigatório  list    ["Sobrenome, Nome"]
+#   year                        obrigatório  int     4 dígitos
+#   venue                       opcional     string
+#   volume                      opcional     string
+#   number                      opcional     string
+#   pages                       opcional     string  formato "42-58"
+#   doi                         opcional     string  formato 10.xxxx/yyyy
+#   url                         opcional     string
+#   pdf_url                     opcional     string
+#   issn                        opcional     string
+#   isbn                        opcional     string
+#   abstract                    opcional     string  1-3 frases
+#   keywords                    opcional     list[string]
+#   language                    opcional     enum    [en, pt, pt-BR, es, fr, de, other]
+#   classification              obrigatório  enum    [HIGH, MEDIUM, LOW, LOW_CONFIDENCE, REJECTED]
+#   evidence_hierarchy_level    obrigatório  int     1-10
+#   web_tier                    opcional     int     1-10 (apenas type=web|documentation)
+#   verification.doi_resolves   opcional     bool
+#   verification.peer_reviewed  opcional     bool
+#   verification.indexed_in     opcional     list    ["Scopus", "WoS"]
+#   verification.authors_affiliated  opcional bool
+#   verification.has_abstract   opcional     bool
+#   quality_indicators.citations_count  opcional int
+#   quality_indicators.code_available   opcional string (URL)
+#   quality_indicators.data_available   opcional string (URL)
+#   quality_indicators.replication_studies  opcional bool
+#   red_flags                   opcional     list[string]
+#   discovered_by               obrigatório  string  [literature-agent, web-research-agent, user-provided, manual]
+#   discovered_at               obrigatório  date    ISO 8601 YYYY-MM-DD
+#   source_base                 opcional     string
+#   preliminary_relevance       opcional     enum    [HIGH, MEDIUM, LOW]
+#   access                      obrigatório  enum    [open, paywalled, institutional, partial]
+#   access_notes                opcional     string
+#   cite_key                    opcional     string
+#   bibtex_entry                opcional     string  (multiline)
+#   search_query                opcional     string
+#   search_date                 opcional     date
+#   notes                       opcional     string
+
+# Valores válidos para campos enum:
+#
+#   type:
+#     - paper
+#     - book
+#     - inproceedings
+#     - incollection
+#     - techreport
+#     - phdthesis
+#     - mastersthesis
+#     - manual
+#     - web
+#     - documentation
+#     - standard
+#     - misc
+#
+#   classification: [HIGH, MEDIUM, LOW, LOW_CONFIDENCE, REJECTED]
+#   language: [en, pt, pt-BR, es, fr, de, other]
+#   discovered_by: [literature-agent, web-research-agent, user-provided, manual]
+#   access: [open, paywalled, institutional, partial]
+#   preliminary_relevance: [HIGH, MEDIUM, LOW]
+
+# ============================================================
+# Exemplo completo (válido YAML, descomentar para usar)
+# ============================================================
+
+# ---
+# id: P001
+# type: paper
+# title: "A Modern Approach to Conic Sections"
+# authors:
+#   - "Smith, John"
+#   - "Doe, Jane"
+# year: 2019
+# venue: "Journal of Geometry"
+# volume: "15"
+# number: "3"
+# pages: "42-58"
+# doi: "10.1000/example.2019.001"
+# url: "https://doi.org/10.1000/example.2019.001"
+# abstract: "Survey of conic sections in modern algebraic geometry..."
+# keywords:
+#   - "conic sections"
+#   - "analytic geometry"
+# language: en
+# classification: HIGH
+# evidence_hierarchy_level: 3
+# verification:
+#   doi_resolves: true
+#   peer_reviewed: true
+#   indexed_in:
+#     - "Scopus"
+#     - "MathSciNet"
+#   authors_affiliated: true
+#   has_abstract: true
+# quality_indicators:
+#   citations_count: 42
+#   code_available: null
+#   data_available: null
+#   replication_studies: false
+# red_flags: []
+# discovered_by: literature-agent
+# discovered_at: 2026-09-02
+# source_base: arxiv
+# preliminary_relevance: HIGH
+# access: open
+# access_notes: "open access via arXiv preprint"
+# cite_key: "smith2019modern"
+# bibtex_entry: |
+#   @article{smith2019modern,
+#     author  = {Smith, John and Doe, Jane},
+#     title   = {A Modern Approach to Conic Sections},
+#     journal = {Journal of Geometry},
+#     year    = {2019},
+#     volume  = {15},
+#     number  = {3},
+#     pages   = {42--58},
+#     doi     = {10.1000/example.2019.001},
+#   }
+# search_query: "conic sections"
+# search_date: 2026-09-02
+# notes: "Seminal paper on modern conic section theory"

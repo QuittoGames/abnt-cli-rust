@@ -1,0 +1,78 @@
+# Schema: task.yaml
+#
+# Schema canônico para registro de uma task do workflow.
+# Produzido por workflow-orchestrator (usando graph-engineering skill).
+# Persistido em .agents/graph/tasks.json.
+
+# Campos:
+#   task_id                       obrigatório  string  único (T001, T002, ...)
+#   title                         obrigatório  string
+#   status                        obrigatório  enum
+#   priority                      obrigatório  enum
+#   mode                          obrigatório  enum
+#   owner                         obrigatório  enum    [human, agent, shared]
+#   agent_assigned                opcional     string
+#   dependencies                  opcional     list[string]
+#   parallel_group                opcional     int
+#   parallel_with                 opcional     list[string]
+#   input                         opcional     mapping (estrutura livre)
+#   output_path                   opcional     string
+#   output_type                   opcional     enum
+#   acceptance_criteria           obrigatório  list[string]
+#   artifacts                     opcional     list[object]
+#     path                        obrigatório  string
+#     type                        obrigatório  enum
+#     produced_at                 opcional     date
+#   created_at                    obrigatório  date
+#   started_at                    opcional     date
+#   completed_at                  opcional     date
+#   estimated_duration_minutes    opcional     int
+#   attempts                      opcional     int
+#   last_error                    opcional     string
+#   notes                         opcional     string
+
+# Valores válidos para enums:
+#
+#   status: [pending, in_progress, completed, blocked, failed, cancelled]
+#   priority: [LOW, MEDIUM, HIGH, CRITICAL]
+#   mode: [READ, WRITE, MECHANICAL, REVIEW]
+#   owner: [human, agent, shared]
+#   output_type: [structured_yaml, structured_json, markdown_report, diff_patch, file_modification, other]
+#   artifacts.type: [yaml, json, md, bib, diff, other]
+
+# ============================================================
+# Exemplo completo (válido YAML, descomentar para usar)
+# ============================================================
+
+# ---
+# task_id: T001
+# title: "Literature discovery for conic sections"
+# status: completed
+# priority: HIGH
+# mode: READ
+# owner: agent
+# agent_assigned: literature-agent
+# dependencies: []
+# parallel_group: 1
+# parallel_with:
+#   - T002
+# input:
+#   query: "conic sections"
+#   period: "2010-2025"
+#   target_count: 20
+# output_path: ".agents/research/T001-candidates.yaml"
+# output_type: structured_yaml
+# acceptance_criteria:
+#   - "At least 15 papers returned with complete metadata"
+#   - "DOI present in at least 80% of entries"
+#   - "preliminary_relevance assigned to all"
+# artifacts:
+#   - path: ".agents/research/T001-candidates.yaml"
+#     type: yaml
+#     produced_at: 2026-09-02T10:15:00Z
+# created_at: 2026-09-02T10:00:00Z
+# started_at: 2026-09-02T10:05:00Z
+# completed_at: 2026-09-02T10:15:00Z
+# estimated_duration_minutes: 10
+# attempts: 1
+# notes: "First attempt succeeded; arXiv returned 12, semantic scholar 8, scholar 6 = 26 candidates, 20 selected"

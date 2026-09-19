@@ -1,0 +1,45 @@
+% components/images.tex
+
+\usepackage{graphicx}
+\usepackage{xkeyval}
+
+\makeatletter
+
+\define@key{ABNTImg}{width}{\def\ABNTImgWidth{#1}}
+\define@key{ABNTImg}{caption}{\def\ABNTImgCaption{#1}}
+\define@key{ABNTImg}{label}{\def\ABNTImgLabel{#1}}
+\define@key{ABNTImg}{source}{\def\ABNTImgSource{#1}}
+
+\newcommand{\Img}[2][]{%
+    \def\ABNTImgWidth{0.55\textwidth}%
+    \def\ABNTImgCaption{}%
+    \def\ABNTImgLabel{}%
+    \def\ABNTImgSource{}%
+
+    \setkeys{ABNTImg}{#1}%
+
+    \begin{figure}[htbp]
+        \centering
+
+        \includegraphics[
+            width=\ABNTImgWidth
+        ]{#2}
+
+        \ifx\ABNTImgCaption\@empty
+        \else
+            \caption{\ABNTImgCaption}
+        \fi
+
+        \ifx\ABNTImgSource\@empty
+        \else
+            \fonte{\ABNTImgSource}
+        \fi
+
+        \ifx\ABNTImgLabel\@empty
+        \else
+            \label{\ABNTImgLabel}
+        \fi
+    \end{figure}
+}
+
+\makeatother
