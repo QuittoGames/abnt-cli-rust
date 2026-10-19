@@ -80,15 +80,22 @@ fn project_dir_for(qmd_filename: &str) -> PathBuf {
 /// do template. Este valor inclui o diretório do template na busca do
 /// LaTeX, cobrindo `components/` (busca recursiva).
 ///
-/// Sintaxe kpathsea: separador `;` (Windows), `//` = busca recursiva,
-/// `;` final = anexa aos paths default (não os substitui).
+/// Sintaxe kpathsea: separador ':' (Unix) ou ';' (Windows), '//' = busca
+/// recursiva, elemento vazio no final = anexa aos paths default (não os
+/// substitui).
 fn texinputs_for(template_path: &Path) -> String {
+    // Separador de path é cfg em tempo de compilação: ':' no Unix, ';' no Windows.
+    #[cfg(windows)]
+    const PATH_SEP: char = ';';
+    #[cfg(not(windows))]
+    const PATH_SEP: char = ':';
+
     template_path
         .parent()
         .filter(|dir| !dir.as_os_str().is_empty())
-        .map(|dir| format!("{}//;", dir.to_string_lossy().replace('\\', "/")))
-        // Sem diretório utilizável: ";" mantém apenas os paths default
-        .unwrap_or_else(|| ";".to_string())
+        .map(|dir| format!("{}//{}", dir.to_string_lossy().replace('\\', "/"), PATH_SEP))
+        // Sem diretório utilizável: só o separador mantém os paths default
+        .unwrap_or_else(|| PATH_SEP.to_string())
 }
 
 pub fn render_pdf(system_path: &str, qmd_filename: &str, template_path: &Path) -> ExitCode {

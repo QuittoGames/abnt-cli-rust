@@ -30,13 +30,21 @@ _Nenhuma task ativa — onda encerrada. Ver **Completed** (TASK-001..011)._
 
 ## Completed
 
+- [x] [A] **TASK-012** Testes de coerência de manutenção da variante
+  (`runner/tests/template_canello_marques.rs`, 3 testes integration/std):
+  (a) variante reconstruível a partir do template-base — invariante
+  anti-derivada: qualquer divergência fora das 2 regiões autorizadas
+  quebra o teste; (b) contrato da capa escolar (constante, placeholders
+  Pandoc, `\fontsize{20}{24}`/`\fontsize{16}{20}`, sem campos novos);
+  (c) parskip 6pt na seção PARÁGRAFOS com `\tightlist` intacto.
+  `cargo test --release`: **19 passed / 0 failed** (16 + 3).
 - [x] [A] **TASK-008** RESOLVIDA (decisões DEV, 19/10/2026, chat):
   DATA/ANO → opção A, receita YAML `date: "2026-01-01"` +
   `date-format: "YYYY"` (validada: capa com `2026`; zero código).
   CITAÇÃO → ajuste autorizado com testes: `cite-method: biblatex` no
   YAML do `.qmd` (validado ponta-a-ponta: `\autocite`, seção REFERÊNCIAS
   com entrada resolvida pelo biber, zero mudança de runner/template)
-  + testes de coerência entregues (TASK-011).
+  + testes de coerência entregues (TASK-012).
 - [x] [A] **TASK-001** Pré-condições verificadas; correções de ambiente em
   user-space (repo intocado, sem sudo):
   `tlmgr --usermode --ignore-warning install babel-portuges` e

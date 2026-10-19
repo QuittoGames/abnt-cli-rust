@@ -48,3 +48,6 @@ desktop.ini
 *.swp
 *.swo
 *~
+
+/.quarto/
+**/*.quarto_ipynb
